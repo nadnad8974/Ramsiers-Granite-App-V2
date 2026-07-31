@@ -18,8 +18,12 @@ private fun page(
     choices = choices
 )
 
-private fun choice(name: String, price: Double = 0.0, unit: String = "each") =
-    Choice(name = name, price = price, unit = unit)
+private fun choice(
+    name: String,
+    price: Double = 0.0,
+    unit: String = "each",
+    imageUri: String = ""
+) = Choice(name = name, price = price, unit = unit, imageUri = imageUri)
 
 object Defaults {
     fun setup() = AppSetup(
@@ -29,7 +33,6 @@ object Defaults {
             page("Email address"),
             page("Job address"),
             page("Notes"),
-            page("Office email"),
             page(
                 "Scan the MSI slab QR code",
                 PageType.QR_SCAN,
@@ -60,9 +63,15 @@ object Defaults {
                 "Choose a sink",
                 PageType.PRODUCT,
                 choices = listOf(
-                    choice("Sink 1"),
-                    choice("Sink 2"),
-                    choice("Sink 3")
+                    choice(
+                        "Rectangle bathroom sink",
+                        imageUri = "android.resource://com.ramsiers.granitequartz.v2/drawable/bathroom_sink_rectangle"
+                    ),
+                    choice(
+                        "Oval bathroom sink",
+                        imageUri = "android.resource://com.ramsiers.granitequartz.v2/drawable/bathroom_sink_oval"
+                    ),
+                    choice("Another sink — I want to pick my own")
                 )
             ),
             page("Cooktop or extra cutouts", PageType.NUMBER, unit = "cutouts", price = 100.0),
@@ -100,6 +109,7 @@ object Defaults {
                 required = true
             ),
             page("Add a kitchen or countertop photo", PageType.PHOTO),
+            page("Are there any other projects you would like a quote for?"),
             page("Review and send the quote", PageType.SUMMARY)
         )
     )

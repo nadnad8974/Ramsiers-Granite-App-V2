@@ -22,11 +22,11 @@ Build a data-driven Android quote app with an Advanced Live Editor. Most content
 
 - One question per screen.
 - Back and Next buttons directly below the question and always visible above the keyboard.
-- Customer name, phone, email, address, notes, and office email.
+- Customer name, phone, email, address, and notes.
 - MSI slab QR scanning and manual slab entry.
 - MSI links and Roomvo visualizer: https://www.roomvo.com/my/msi/?product_type=1&multi_product_visualizer=5
 - Countertop section measurements, quantities, square footage, stove opening, and pricing.
-- Three sink product choices with pictures.
+- Rectangle and oval bathroom sinks with pictures, plus another-sink option.
 - Cooktop or extra cutouts at $100 each.
 - Edge details: eased and polished free; small round, big round, bevel, and big bevel at $10 per linear foot.
 - RAMSIER'S faucet at $225.
@@ -35,6 +35,8 @@ Build a data-driven Android quote app with an Advanced Live Editor. Most content
 - Ask whether cabinets are installed and the approximate date.
 - On the next screen ask whether the customer wants to buy cabinets from RAMSIER'S.
 - Kitchen/countertop photo selection.
+- “Are there any other projects?” near the end, immediately before review.
+- No separate quote-recipient email or square-footage-price question.
 - Review, calculate, save, and send the quote.
 
 ## V2 testing strategy
