@@ -40,3 +40,17 @@ Build a data-driven Android quote app with an Advanced Live Editor. Most content
 ## V2 testing strategy
 
 Use a separate Android application ID so V2 can be installed beside V1. Keep V1 and its GitHub repository unchanged until V2 passes phone testing.
+
+## Current V2 test build
+
+- Application ID: `com.ramsiers.granitequartz.v2`
+- Version: `2.0.0-test1`
+- V2 installs beside V1 instead of replacing it.
+- The app automatically saves the live form design and current quote on the phone.
+- The Advanced Live Editor includes page creation, deletion, duplication, enable/disable,
+  reordering, all required page types, choice and product editing, phone-selected pictures,
+  live preview, editable formulas, JSON import/export, Undo, and Restore Defaults.
+- GitHub Actions runs the unit tests and uploads `RAMSIERS-GRANITE-V2-TEST.apk`.
+
+To get the phone test build, open **Actions → Build V2 Test APK**, open the newest successful
+run, and download the **RAMSIERS-GRANITE-V2-TEST-APK** artifact.
