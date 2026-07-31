@@ -39,24 +39,17 @@ object Defaults {
                 PageType.PRODUCT,
                 choices = listOf(
                     choice(
-                        "Rectangle vanity sink - White",
+                        "Rectangle bathroom sink",
                         imageUri = "android.resource://com.ramsiers.granitequartz.v2/drawable/bathroom_sink_rectangle"
                     ),
                     choice(
-                        "Rectangle vanity sink - Biscuit",
-                        imageUri = "android.resource://com.ramsiers.granitequartz.v2/drawable/bathroom_sink_rectangle"
-                    ),
-                    choice(
-                        "Oval vanity sink - White",
-                        imageUri = "android.resource://com.ramsiers.granitequartz.v2/drawable/bathroom_sink_oval"
-                    ),
-                    choice(
-                        "Oval vanity sink - Biscuit",
+                        "Oval bathroom sink",
                         imageUri = "android.resource://com.ramsiers.granitequartz.v2/drawable/bathroom_sink_oval"
                     ),
                     choice("Another sink — I want to pick my own")
                 )
             ),
+            page("Cooktop or extra cutouts", PageType.NUMBER, unit = "cutouts", price = 100.0),
             page(
                 "Add a RAMSIER'S faucet?",
                 PageType.PRODUCT,
@@ -110,7 +103,7 @@ object Defaults {
                 PageType.QR_SCAN,
                 help = "Scan the slab tag or enter its code manually."
             ),
-            page("Project notes"),
+            page("Notes"),
             page("Review and send the quote", PageType.SUMMARY)
         )
     )

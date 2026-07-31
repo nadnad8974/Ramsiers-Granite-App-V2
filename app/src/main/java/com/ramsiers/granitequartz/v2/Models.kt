@@ -52,7 +52,7 @@ data class QuoteAnswer(
 
 @Serializable
 data class AppSetup(
-    val version: Int = 3,
+    val version: Int = 1,
     val officeEmail: String = "",
     val pages: List<FormPage> = emptyList(),
     val answers: Map<String, QuoteAnswer> = emptyMap()

@@ -315,24 +315,12 @@ private fun AnswerField(
     }
 
     when (page.type) {
-        PageType.TEXT, PageType.DATE -> {
-            OutlinedTextField(
-                value = answer.value,
-                onValueChange = { onChange(answer.copy(value = it)) },
-                label = { Text(if (page.type == PageType.DATE) "Date" else "Answer") },
-                modifier = Modifier.fillMaxWidth()
-            )
-            if (page.isAddressPage()) {
-                Spacer(Modifier.height(10.dp))
-                Button(
-                    onClick = { openAddressInMaps(context, answer.value) },
-                    enabled = answer.value.isNotBlank(),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("Open in Google Maps")
-                }
-            }
-        }
+        PageType.TEXT, PageType.DATE -> OutlinedTextField(
+            value = answer.value,
+            onValueChange = { onChange(answer.copy(value = it)) },
+            label = { Text(if (page.type == PageType.DATE) "Date" else "Answer") },
+            modifier = Modifier.fillMaxWidth()
+        )
         PageType.NUMBER, PageType.CURRENCY -> OutlinedTextField(
             value = answer.value,
             onValueChange = { onChange(answer.copy(value = it)) },
@@ -416,29 +404,6 @@ private fun AnswerField(
             }
         }
         PageType.SUMMARY -> QuoteSummary(allPages, allAnswers)
-    }
-}
-
-internal fun FormPage.isAddressPage(): Boolean =
-    type == PageType.TEXT && title.contains("address", ignoreCase = true)
-
-private fun openAddressInMaps(context: android.content.Context, address: String) {
-    val encoded = Uri.encode(address)
-    val googleMaps = Intent(
-        Intent.ACTION_VIEW,
-        Uri.parse("geo:0,0?q=$encoded")
-    ).apply {
-        setPackage("com.google.android.apps.maps")
-    }
-    runCatching {
-        context.startActivity(googleMaps)
-    }.onFailure {
-        context.startActivity(
-            Intent(
-                Intent.ACTION_VIEW,
-                Uri.parse("https://www.google.com/maps/search/?api=1&query=$encoded")
-            )
-        )
     }
 }
 
