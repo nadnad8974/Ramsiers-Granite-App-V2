@@ -57,7 +57,6 @@ object Defaults {
                     choice("Another sink — I want to pick my own")
                 )
             ),
-            page("Cooktop or extra cutouts", PageType.NUMBER, unit = "cutouts", price = 100.0),
             page(
                 "Add a RAMSIER'S faucet?",
                 PageType.PRODUCT,
@@ -111,7 +110,7 @@ object Defaults {
                 PageType.QR_SCAN,
                 help = "Scan the slab tag or enter its code manually."
             ),
-            page("Notes"),
+            page("Project notes"),
             page("Review and send the quote", PageType.SUMMARY)
         )
     )

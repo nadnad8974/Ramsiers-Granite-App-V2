@@ -34,7 +34,7 @@ class AppStorage(context: Context) {
 }
 
 internal fun migrateSetup(setup: AppSetup): AppSetup {
-    val migratedPages = setup.pages.map { page ->
+    var migratedPages = setup.pages.map { page ->
         val hasRectangle = page.choices.any {
             it.name.contains("Rectangle", ignoreCase = true)
         }
@@ -70,5 +70,27 @@ internal fun migrateSetup(setup: AppSetup): AppSetup {
             }
         )
     }
-    return setup.copy(version = 2, pages = migratedPages)
+    if (setup.version < 3 && migratedPages.any { it.type == PageType.SUMMARY }) {
+        migratedPages = migratedPages
+            .filterIndexed { index, _ -> index != 5 }
+            .filterNot {
+                it.title.contains("square footage price", ignoreCase = true)
+            }
+
+        val notesPage = migratedPages.firstOrNull {
+            it.title.equals("Notes", ignoreCase = true) ||
+                it.title.equals("Project notes", ignoreCase = true)
+        }?.copy(title = "Project notes") ?: FormPage(title = "Project notes")
+
+        val withoutNotes = migratedPages.filterNot {
+            it.title.equals("Notes", ignoreCase = true) ||
+                it.title.equals("Project notes", ignoreCase = true)
+        }
+        val summaryIndex = withoutNotes.indexOfFirst { it.type == PageType.SUMMARY }
+        migratedPages = withoutNotes.toMutableList().apply {
+            add(if (summaryIndex >= 0) summaryIndex else size, notesPage)
+        }
+    }
+
+    return setup.copy(version = 3, pages = migratedPages)
 }

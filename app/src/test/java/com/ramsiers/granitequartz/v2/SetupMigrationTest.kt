@@ -26,7 +26,7 @@ class SetupMigrationTest {
         val migrated = migrateSetup(setup)
         val choices = migrated.pages.single().choices
 
-        assertEquals(2, migrated.version)
+        assertEquals(3, migrated.version)
         assertEquals(
             listOf(
                 "Rectangle vanity sink - White",
@@ -52,5 +52,31 @@ class SetupMigrationTest {
             setup.pages.first { it.title == "Choose a sink" }.choices.map { it.name },
             migrated.pages.first { it.title == "Choose a sink" }.choices.map { it.name }
         )
+    }
+
+    @Test
+    fun removesRequestedPagesAndMovesProjectNotesBeforeSummary() {
+        val pages = (1..7).map { FormPage(id = "page-$it", title = "Page $it") } +
+            listOf(
+                FormPage(id = "price", title = "What is the square footage price?"),
+                FormPage(id = "notes", title = "Notes"),
+                FormPage(id = "review", title = "Review", type = PageType.SUMMARY)
+            )
+        val setup = AppSetup(
+            version = 2,
+            pages = pages,
+            answers = mapOf("notes" to QuoteAnswer(value = "Keep these notes"))
+        )
+
+        val migrated = migrateSetup(setup)
+
+        assertEquals(3, migrated.version)
+        assertFalse(migrated.pages.any { it.id == "page-6" })
+        assertFalse(migrated.pages.any {
+            it.title.contains("square footage price", ignoreCase = true)
+        })
+        assertEquals("Project notes", migrated.pages[migrated.pages.lastIndex - 1].title)
+        assertEquals("notes", migrated.pages[migrated.pages.lastIndex - 1].id)
+        assertEquals("Keep these notes", migrated.answers.getValue("notes").value)
     }
 }

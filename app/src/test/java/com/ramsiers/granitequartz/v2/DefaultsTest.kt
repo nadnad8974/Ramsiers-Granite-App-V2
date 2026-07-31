@@ -13,6 +13,7 @@ class DefaultsTest {
 
         assertFalse(titles.any { it.contains("email should receive") || it == "office email" })
         assertFalse(titles.any { it.contains("square footage price") })
+        assertFalse(titles.any { it == "cooktop or extra cutouts" })
 
         val sinkPage = pages.first { it.title == "Choose a sink" }
         assertEquals(
@@ -37,7 +38,6 @@ class DefaultsTest {
                 "Email address",
                 "Job address",
                 "Choose a sink",
-                "Cooktop or extra cutouts",
                 "Add a RAMSIER'S faucet?",
                 "Basket drains",
                 "Big sink grids",
@@ -50,12 +50,17 @@ class DefaultsTest {
                 "Choose the edge detail",
                 "MSI color or slab name",
                 "Scan the MSI slab QR code",
-                "Notes",
+                "Project notes",
                 "Review and send the quote"
             ),
             pages.map { it.title }
         )
         assertFalse(pages.first { it.title == "Countertop section measurements" }.enabled)
         assertFalse(titles.any { it == "stove opening" })
+        assertEquals(
+            pages.lastIndex - 1,
+            pages.indexOfFirst { it.title == "Project notes" }
+        )
+        assertTrue(pages.first { it.title == "Job address" }.isAddressPage())
     }
 }
