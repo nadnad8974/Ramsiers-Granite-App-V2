@@ -62,11 +62,14 @@ jobs:
           retention-days: 30
 
       - name: Publish direct APK download
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: v2.0.0-test1
-          name: RAMSIER'S GRANITE V2 Test 1
-          body: First phone-test build of the separate V2 app with the Advanced Live Editor.
-          prerelease: true
-          files: RAMSIERS-GRANITE-V2-TEST.apk
+        if: github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view v2-test-latest >/dev/null 2>&1 || \
+            gh release create v2-test-latest \
+              --title "RAMSIER'S GRANITE V2 Latest Test APK" \
+              --notes "Latest automatic Android test build." \
+              --prerelease \
+              --target "${GITHUB_SHA}"
+          gh release upload v2-test-latest RAMSIERS-GRANITE-V2-TEST.apk --clobber
