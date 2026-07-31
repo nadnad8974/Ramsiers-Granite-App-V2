@@ -17,14 +17,18 @@ class DefaultsTest {
         val sinkPage = pages.first { it.title == "Choose a sink" }
         assertEquals(
             listOf(
-                "Rectangle bathroom sink",
-                "Oval bathroom sink",
+                "Rectangle vanity sink - White",
+                "Rectangle vanity sink - Biscuit",
+                "Oval vanity sink - White",
+                "Oval vanity sink - Biscuit",
                 "Another sink — I want to pick my own"
             ),
             sinkPage.choices.map { it.name }
         )
         assertTrue(sinkPage.choices[0].imageUri.contains("bathroom_sink_rectangle"))
-        assertTrue(sinkPage.choices[1].imageUri.contains("bathroom_sink_oval"))
+        assertTrue(sinkPage.choices[1].imageUri.contains("bathroom_sink_rectangle"))
+        assertTrue(sinkPage.choices[2].imageUri.contains("bathroom_sink_oval"))
+        assertTrue(sinkPage.choices[3].imageUri.contains("bathroom_sink_oval"))
 
         assertEquals(
             listOf(

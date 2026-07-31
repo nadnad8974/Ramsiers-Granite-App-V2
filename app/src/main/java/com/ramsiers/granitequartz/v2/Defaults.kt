@@ -39,11 +39,19 @@ object Defaults {
                 PageType.PRODUCT,
                 choices = listOf(
                     choice(
-                        "Rectangle bathroom sink",
+                        "Rectangle vanity sink - White",
                         imageUri = "android.resource://com.ramsiers.granitequartz.v2/drawable/bathroom_sink_rectangle"
                     ),
                     choice(
-                        "Oval bathroom sink",
+                        "Rectangle vanity sink - Biscuit",
+                        imageUri = "android.resource://com.ramsiers.granitequartz.v2/drawable/bathroom_sink_rectangle"
+                    ),
+                    choice(
+                        "Oval vanity sink - White",
+                        imageUri = "android.resource://com.ramsiers.granitequartz.v2/drawable/bathroom_sink_oval"
+                    ),
+                    choice(
+                        "Oval vanity sink - Biscuit",
                         imageUri = "android.resource://com.ramsiers.granitequartz.v2/drawable/bathroom_sink_oval"
                     ),
                     choice("Another sink — I want to pick my own")
