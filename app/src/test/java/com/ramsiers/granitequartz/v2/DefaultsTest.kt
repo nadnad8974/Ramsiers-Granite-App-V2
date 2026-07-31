@@ -26,10 +26,32 @@ class DefaultsTest {
         assertTrue(sinkPage.choices[0].imageUri.contains("bathroom_sink_rectangle"))
         assertTrue(sinkPage.choices[1].imageUri.contains("bathroom_sink_oval"))
 
-        val otherProjects = pages.indexOfFirst {
-            it.title == "Are there any other projects you would like a quote for?"
-        }
-        val review = pages.indexOfFirst { it.type == PageType.SUMMARY }
-        assertEquals(review - 1, otherProjects)
+        assertEquals(
+            listOf(
+                "Customer name",
+                "Phone number",
+                "Email address",
+                "Job address",
+                "Choose a sink",
+                "Cooktop or extra cutouts",
+                "Add a RAMSIER'S faucet?",
+                "Basket drains",
+                "Big sink grids",
+                "Are the cabinets installed?",
+                "Approximate cabinet installation date",
+                "Would you like to buy cabinets from RAMSIER'S?",
+                "Are there any other projects you would like a quote for?",
+                "Countertop section measurements",
+                "Add a kitchen or countertop photo",
+                "Choose the edge detail",
+                "MSI color or slab name",
+                "Scan the MSI slab QR code",
+                "Notes",
+                "Review and send the quote"
+            ),
+            pages.map { it.title }
+        )
+        assertFalse(pages.first { it.title == "Countertop section measurements" }.enabled)
+        assertFalse(titles.any { it == "stove opening" })
     }
 }

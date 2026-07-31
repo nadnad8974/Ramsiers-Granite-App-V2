@@ -3,6 +3,7 @@ package com.ramsiers.granitequartz.v2
 private fun page(
     title: String,
     type: PageType = PageType.TEXT,
+    enabled: Boolean = true,
     required: Boolean = false,
     help: String = "",
     unit: String = "",
@@ -11,6 +12,7 @@ private fun page(
 ) = FormPage(
     title = title,
     type = type,
+    enabled = enabled,
     required = required,
     helpText = help,
     unit = unit,
@@ -32,33 +34,6 @@ object Defaults {
             page("Phone number", required = true),
             page("Email address"),
             page("Job address"),
-            page("Notes"),
-            page(
-                "Scan the MSI slab QR code",
-                PageType.QR_SCAN,
-                help = "Scan the slab tag or enter its code manually."
-            ),
-            page(
-                "MSI color or slab name",
-                help = "Roomvo: https://www.roomvo.com/my/msi/?product_type=1&multi_product_visualizer=5"
-            ),
-            page(
-                "Countertop section measurements",
-                PageType.MEASUREMENT,
-                required = true,
-                help = "Enter length and width in inches plus the number of matching pieces.",
-                unit = "sq ft",
-                price = 0.0
-            ),
-            page(
-                "Stove opening",
-                PageType.MULTIPLE_CHOICE,
-                choices = listOf(
-                    choice("None"),
-                    choice("Slide-in stove — subtract opening"),
-                    choice("Cooktop — keep countertop")
-                )
-            ),
             page(
                 "Choose a sink",
                 PageType.PRODUCT,
@@ -75,17 +50,6 @@ object Defaults {
                 )
             ),
             page("Cooktop or extra cutouts", PageType.NUMBER, unit = "cutouts", price = 100.0),
-            page(
-                "Choose the edge detail",
-                PageType.PRODUCT,
-                choices = listOf(
-                    choice("Eased and polished", 0.0, "linear foot"),
-                    choice("Small round", 10.0, "linear foot"),
-                    choice("Big round", 10.0, "linear foot"),
-                    choice("Bevel", 10.0, "linear foot"),
-                    choice("Big bevel", 10.0, "linear foot")
-                )
-            ),
             page(
                 "Add a RAMSIER'S faucet?",
                 PageType.PRODUCT,
@@ -108,8 +72,38 @@ object Defaults {
                 PageType.YES_NO,
                 required = true
             ),
-            page("Add a kitchen or countertop photo", PageType.PHOTO),
             page("Are there any other projects you would like a quote for?"),
+            page(
+                "Countertop section measurements",
+                PageType.MEASUREMENT,
+                enabled = false,
+                required = true,
+                help = "Enter length and width in inches plus the number of matching pieces.",
+                unit = "sq ft",
+                price = 0.0
+            ),
+            page("Add a kitchen or countertop photo", PageType.PHOTO),
+            page(
+                "Choose the edge detail",
+                PageType.PRODUCT,
+                choices = listOf(
+                    choice("Eased and polished", 0.0, "linear foot"),
+                    choice("Small round", 10.0, "linear foot"),
+                    choice("Big round", 10.0, "linear foot"),
+                    choice("Bevel", 10.0, "linear foot"),
+                    choice("Big bevel", 10.0, "linear foot")
+                )
+            ),
+            page(
+                "MSI color or slab name",
+                help = "Roomvo: https://www.roomvo.com/my/msi/?product_type=1&multi_product_visualizer=5"
+            ),
+            page(
+                "Scan the MSI slab QR code",
+                PageType.QR_SCAN,
+                help = "Scan the slab tag or enter its code manually."
+            ),
+            page("Notes"),
             page("Review and send the quote", PageType.SUMMARY)
         )
     )

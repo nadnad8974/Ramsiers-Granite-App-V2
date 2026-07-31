@@ -13,10 +13,19 @@ android {
         applicationId = "com.ramsiers.granitequartz.v2"
         minSdk = 26
         targetSdk = 35
-        versionCode = 1
-        versionName = "2.0.0-test1"
+        versionCode = 2
+        versionName = "2.0.0-test2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        getByName("debug") {
+            storeFile = file("ramsiers-v2-test.keystore")
+            storePassword = "android"
+            keyAlias = "ramsiersv2test"
+            keyPassword = "android"
+        }
     }
 
     buildTypes {
