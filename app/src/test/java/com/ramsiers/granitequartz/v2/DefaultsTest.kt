@@ -54,4 +54,12 @@ class DefaultsTest {
         assertFalse(pages.first { it.title == "Countertop section measurements" }.enabled)
         assertFalse(titles.any { it == "stove opening" })
     }
+
+    @Test
+    fun addressSuggestionsWaitUntilQueryHasEnoughLetters() {
+        assertFalse(shouldSearchAddressSuggestions(""))
+        assertFalse(shouldSearchAddressSuggestions("123"))
+        assertTrue(shouldSearchAddressSuggestions("1234"))
+        assertTrue(shouldSearchAddressSuggestions("Main"))
+    }
 }
