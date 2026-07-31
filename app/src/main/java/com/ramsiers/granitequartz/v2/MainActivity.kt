@@ -1,6 +1,8 @@
 package com.ramsiers.granitequartz.v2
 
 import android.content.Intent
+import android.location.Address
+import android.location.Geocoder
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -82,7 +84,11 @@ import coil3.compose.AsyncImage
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions
 import com.google.mlkit.vision.codescanner.GmsBarcodeScanning
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.util.Locale
 
 private enum class AppScreen { QUOTE, EDITOR }
 
@@ -315,12 +321,21 @@ private fun AnswerField(
     }
 
     when (page.type) {
-        PageType.TEXT, PageType.DATE -> OutlinedTextField(
-            value = answer.value,
-            onValueChange = { onChange(answer.copy(value = it)) },
-            label = { Text(if (page.type == PageType.DATE) "Date" else "Answer") },
-            modifier = Modifier.fillMaxWidth()
-        )
+        PageType.TEXT, PageType.DATE -> {
+            if (page.isAddressPage()) {
+                AddressAnswerField(
+                    value = answer.value,
+                    onValueChange = { onChange(answer.copy(value = it)) }
+                )
+            } else {
+                OutlinedTextField(
+                    value = answer.value,
+                    onValueChange = { onChange(answer.copy(value = it)) },
+                    label = { Text(if (page.type == PageType.DATE) "Date" else "Answer") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        }
         PageType.NUMBER, PageType.CURRENCY -> OutlinedTextField(
             value = answer.value,
             onValueChange = { onChange(answer.copy(value = it)) },
@@ -404,6 +419,121 @@ private fun AnswerField(
             }
         }
         PageType.SUMMARY -> QuoteSummary(allPages, allAnswers)
+    }
+}
+
+internal fun FormPage.isAddressPage(): Boolean =
+    type == PageType.TEXT && title.contains("address", ignoreCase = true)
+
+@Composable
+private fun AddressAnswerField(
+    value: String,
+    onValueChange: (String) -> Unit
+) {
+    val context = LocalContext.current
+    var suggestions by remember { mutableStateOf<List<String>>(emptyList()) }
+    var isSearching by remember { mutableStateOf(false) }
+    var selectedValue by remember { mutableStateOf("") }
+
+    LaunchedEffect(value) {
+        if (!shouldSearchAddressSuggestions(value) || value == selectedValue) {
+            suggestions = emptyList()
+            isSearching = false
+            return@LaunchedEffect
+        }
+        isSearching = true
+        delay(450)
+        suggestions = findAddressSuggestions(context, value)
+        isSearching = false
+    }
+
+    OutlinedTextField(
+        value = value,
+        onValueChange = {
+            selectedValue = ""
+            onValueChange(it)
+        },
+        label = { Text("Type the project address") },
+        modifier = Modifier.fillMaxWidth()
+    )
+    if (isSearching) {
+        Spacer(Modifier.height(6.dp))
+        Text("Finding addresses...", style = MaterialTheme.typography.bodySmall)
+    }
+    if (suggestions.isNotEmpty()) {
+        Spacer(Modifier.height(8.dp))
+        Card(Modifier.fillMaxWidth()) {
+            Column(Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
+                suggestions.forEach { suggestion ->
+                    TextButton(
+                        onClick = {
+                            selectedValue = suggestion
+                            suggestions = emptyList()
+                            onValueChange(suggestion)
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(suggestion, modifier = Modifier.fillMaxWidth())
+                    }
+                }
+            }
+        }
+    }
+    Spacer(Modifier.height(10.dp))
+    Button(
+        onClick = { openAddressInMaps(context, value) },
+        enabled = value.isNotBlank(),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Text("Open in Google Maps")
+    }
+}
+
+internal fun shouldSearchAddressSuggestions(query: String): Boolean =
+    query.trim().length >= 4
+
+private suspend fun findAddressSuggestions(
+    context: android.content.Context,
+    query: String
+): List<String> = withContext(Dispatchers.IO) {
+    runCatching {
+        Geocoder(context, Locale.US)
+            .getFromLocationName(query, 5)
+            .orEmpty()
+            .mapNotNull { it.toSuggestionText() }
+            .distinct()
+    }.getOrDefault(emptyList())
+}
+
+private fun Address.toSuggestionText(): String? {
+    val direct = getAddressLine(0)?.trim()
+    if (!direct.isNullOrBlank()) return direct
+
+    return listOfNotNull(
+        thoroughfare,
+        locality,
+        adminArea,
+        postalCode
+    ).joinToString(", ").takeIf { it.isNotBlank() }
+}
+
+private fun openAddressInMaps(context: android.content.Context, address: String) {
+    val encoded = Uri.encode(address)
+    val googleMaps = Intent(
+        Intent.ACTION_VIEW,
+        Uri.parse("geo:0,0?q=$encoded")
+    ).apply {
+        setPackage("com.google.android.apps.maps")
+    }
+    runCatching {
+        context.startActivity(googleMaps)
+    }.onFailure {
+        context.startActivity(
+            Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse("https://www.google.com/maps/search/?api=1&query=$encoded")
+            )
+        )
     }
 }
 
