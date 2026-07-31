@@ -15,7 +15,7 @@ on:
       - "**.md"
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: v2-test-apk-${{ github.ref }}
@@ -60,3 +60,13 @@ jobs:
           path: RAMSIERS-GRANITE-V2-TEST.apk
           if-no-files-found: error
           retention-days: 30
+
+      - name: Publish direct APK download
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v2.0.0-test1
+          name: RAMSIER'S GRANITE V2 Test 1
+          body: First phone-test build of the separate V2 app with the Advanced Live Editor.
+          prerelease: true
+          files: RAMSIERS-GRANITE-V2-TEST.apk
