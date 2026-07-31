@@ -15,7 +15,7 @@ on:
       - "**.md"
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: v2-test-apk-${{ github.ref }}
@@ -60,3 +60,16 @@ jobs:
           path: RAMSIERS-GRANITE-V2-TEST.apk
           if-no-files-found: error
           retention-days: 30
+
+      - name: Publish direct APK download
+        if: github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view v2-test-latest >/dev/null 2>&1 || \
+            gh release create v2-test-latest \
+              --title "RAMSIER'S GRANITE V2 Latest Test APK" \
+              --notes "Latest automatic Android test build." \
+              --prerelease \
+              --target "${GITHUB_SHA}"
+          gh release upload v2-test-latest RAMSIERS-GRANITE-V2-TEST.apk --clobber
